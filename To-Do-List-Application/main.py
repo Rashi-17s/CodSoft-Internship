@@ -52,14 +52,16 @@ while True:
                 print(index, ".", task)
                 index +=1
                 
-            task_number = int(input("Enter task index to update : "))
-            if(0<=task_number <len(tasks)):
-                new_task = input("Enter New Task : ")
-                tasks[task_number] = new_task
-                print("Task updated successfully!")
-            else:
-                print("Invalid task")
-    
+            try:
+                task_number = int(input("Enter task index to update : "))
+                if(0<=task_number <len(tasks)):
+                    new_task = input("Enter New Task : ")
+                    tasks[task_number] = new_task
+                    print("Task updated successfully!")
+                else:
+                    print("Invalid task index!")
+            except ValueError:
+                print("Please enter a valid number!")
     
     elif(choice == "4"):
         if(len(tasks) == 0):
@@ -71,14 +73,17 @@ while True:
                 print(index, ".", task)
                 index += 1
                 
-            task_number = int(input("Enter task index to delete : "))
-            if(0<task_number<len(tasks)):
-                deleted_task = tasks.pop(task_number)
-                completed.pop(task_number)
-                print("Task deleted successfully!")
-                print("Deleted Task :", deleted_task)
-            else:
-                print("Invalid task")        
+            try:
+                task_number = int(input("Enter task index to delete : "))
+                if(0<task_number<len(tasks)):
+                    deleted_task = tasks.pop(task_number)
+                    completed.pop(task_number)
+                    print("Task deleted successfully!")
+                    print("Deleted Task :", deleted_task)
+                else:
+                    print("Invalid task")      
+            except ValueError:
+                print("Please enter a valid number!")
         
     elif(choice == "5"):
         if(len(tasks)==0):
@@ -95,12 +100,15 @@ while True:
                 print(index, ".", task, "-", status)
                 index += 1
                 
-            task_number = int(input("Enter task index to mark as completed : "))
-            if(0<=task_number<len(tasks)):
-                completed[task_number] = True
-                print("Task marked as completed!")
-            else:
-                print("Invalid task index!")
+            try:
+                task_number = int(input("Enter task index to mark as completed : "))
+                if(0<=task_number<len(tasks)):
+                    completed[task_number] = True
+                    print("Task marked as completed!")
+                else:
+                    print("Invalid task index!")
+            except ValueError:
+                print("Please enter a valid number!")
                 
                 
     elif(choice == "6"):
