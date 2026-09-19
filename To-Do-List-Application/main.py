@@ -4,6 +4,8 @@ print("===================================")
 
 tasks = []
 completed = []
+priorities = []
+
 
 while True:
     print("1. Add Task")
@@ -17,8 +19,27 @@ while True:
     
     if(choice == "1"):
         task = input("Enter Your Task : ")
+        
+        print("Select Task Priority : ")
+        print("1. High")
+        print("2. Medium")
+        print("3. Low")
+        
+        priority_choice = input("Enter your choice : ")
+        
+        if(priority_choice == "1"):
+            priority = "High"
+        elif(priority_choice == "2"):
+            priority = "Medium"
+        elif(priority_choice == "3"):
+            priority = "Low"
+        else:
+            print("Invalid priority! Setting priority to  Medium.")
+            priority = "Medium"
+            
         tasks.append(task)
         completed.append(False)
+        priorities.append(priority)
         print("Task added successfully!")
         
         
@@ -36,7 +57,7 @@ while True:
                 else:
                     status = "Pending"
                     
-                print(index, ".", task, "-", status)
+                print(index, ".", task, "- Priority :", priorities[index], "-", status)
                 index += 1
                 
                 
@@ -60,6 +81,7 @@ while True:
                     print("Task updated successfully!")
                 else:
                     print("Invalid task index!")
+                    
             except ValueError:
                 print("Please enter a valid number!")
     
@@ -78,10 +100,12 @@ while True:
                 if(0<task_number<len(tasks)):
                     deleted_task = tasks.pop(task_number)
                     completed.pop(task_number)
+                    priorities.pop(task_number)
                     print("Task deleted successfully!")
                     print("Deleted Task :", deleted_task)
                 else:
                     print("Invalid task")      
+                    
             except ValueError:
                 print("Please enter a valid number!")
         
@@ -107,6 +131,7 @@ while True:
                     print("Task marked as completed!")
                 else:
                     print("Invalid task index!")
+                    
             except ValueError:
                 print("Please enter a valid number!")
                 
