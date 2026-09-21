@@ -13,7 +13,8 @@ while True:
     print("3. Update Task")
     print("4. Delete Task")
     print("5. Mark Task as Completed")
-    print("6. Exit")
+    print("6. Search Task")
+    print("7. Exit")
     
     choice = input("\nEnter your choice : ")
     
@@ -137,6 +138,26 @@ while True:
                 
                 
     elif(choice == "6"):
+        if(len(tasks) == 0):
+            print("No task available to search.")
+        else:
+            search_task = input("Enter task to search : ").lower()
+            found = False
+            
+            for index in range(len(tasks)):
+                if search_task in tasks[index].lower():
+                    
+                    if(completed[index] == True):
+                        status = "Completed"
+                    else:
+                        status = "Pending"
+                    print(index,".", tasks[index], "- Priority :", priorities[index], "-", status)
+                    found = True
+            if found == False:
+                print("No matching task found")
+                
+                
+    elif(choice == "7"):
         print("Thank You for using To-Do List!")
         break
     
