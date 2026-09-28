@@ -373,6 +373,7 @@ Possible future improvements include:
 ## 👩‍💻 Author
 
 **Rashi Singh**
+
 B.Sc. Computer Science Student
 
 ---
