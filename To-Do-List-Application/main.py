@@ -1,3 +1,5 @@
+import tkinter as tk
+
 print("===================================")
 print("      TO-DO-LIST APPLICATION       ")
 print("===================================")
@@ -6,38 +8,25 @@ tasks = []
 completed = []
 priorities = []
 
-
 def add_task():
-    task = input("Enter Your Task : ")
+    task = task_entry.get()
 
-    print("\nSelect Task Priority : ")
-    print("1. High")
-    print("2. Medium")
-    print("3. Low")
-
-    priority_choice = input("Enter your choice : ")
-
-    if priority_choice == "1":
-        priority = "High"
-    elif priority_choice == "2":
-        priority = "Medium"
-    elif priority_choice == "3":
-        priority = "Low"
-    else:
-        print("Invalid priority! Setting priority to Medium.")
-        priority = "Medium"
-
+    if task == "":
+        print("Please enter a task!")
+        return
+    priority = priority_var.get()
     tasks.append(task)
     completed.append(False)
     priorities.append(priority)
     print("Task added successfully!")
-
+    task_entry.delete(0, tk.END)
+    view_tasks()
 
 def view_tasks():
+    task_list.delete(0, tk.END)
     print("\nYour Task List")
-
     if len(tasks) == 0:
-        print("\nNo tasks available")
+        print("No tasks available")
     else:
         index = 0
         for task in tasks:
@@ -46,137 +35,226 @@ def view_tasks():
             else:
                 status = "Pending"
             print(index, ".", task, "- Priority :", priorities[index], "-", status)
+            task_list.insert(tk.END, task)
             index += 1
-
 
 def update_task():
+    selected = task_list.curselection()
+    if len(selected) == 0:
+        print("Please select a task to update!")
+        return
+    task_number = selected[0]
+    new_task = task_entry.get()
 
-    if len(tasks) == 0:
-        print("No task available to update.")
-    else:
-        print("Your Task List.")
-        index = 0
-        
-        for task in tasks:
-            print(index, ".", task)
-            index += 1
-
-        try:
-            task_number = int(
-                input("Enter task index to update : ")
-            )
-
-            if 0 <= task_number < len(tasks):
-                new_task = input("Enter New Task : ")
-                tasks[task_number] = new_task
-                print("Task updated successfully!")
-            else:
-                print("Invalid task index!")
-        except ValueError:
-            print("Please enter a valid number!")
-
+    if new_task == "":
+        print("Please enter a new task!")
+        return
+    tasks[task_number] = new_task
+    print("Task updated successfully!")
+    task_entry.delete(0, tk.END)
+    view_tasks()
 
 def delete_task():
-
-    if len(tasks) == 0:
-        print("No tasks available to delete")
-    else:
-        print("Your Task List")
-        index = 0
-        for task in tasks:
-            print(index, ".", task)
-            index += 1
-        try:
-            task_number = int(
-                input("Enter task index to delete : ")
-            )
-            if 0 <= task_number < len(tasks):
-                deleted_task = tasks.pop(task_number)
-                completed.pop(task_number)
-                priorities.pop(task_number)
-                print("Task deleted successfully!")
-                print("Deleted Task :", deleted_task)
-            else:
-                print("Invalid task index!")
-        except ValueError:
-            print("Please enter a valid number!")
-
+    selected = task_list.curselection()
+    if len(selected) == 0:
+        print("Please select a task to delete!")
+        return
+    task_number = selected[0]
+    deleted_task = tasks.pop(task_number)
+    completed.pop(task_number)
+    priorities.pop(task_number)
+    print("Task deleted successfully!")
+    print(
+        "Deleted Task :",
+        deleted_task
+    )
+    view_tasks()
 
 def mark_completed():
+    selected = task_list.curselection()
+    if len(selected) == 0:
+        print("Please select a task!")
+        return
+    task_number = selected[0]
+    completed[task_number] = True
+    print("Task marked as completed!")
+    view_tasks()
 
-    if len(tasks) == 0:
-        print("No tasks available")
-    else:
-        print("Your Task List")
-        index = 0
-        for task in tasks:
+def search_task():
+    search = search_entry.get().lower()
+    task_list.delete(0, tk.END)
+    found = False
+    index = 0
+    for task in tasks:
+        if search in task.lower():
             if completed[index] == True:
                 status = "Completed"
             else:
                 status = "Pending"
-            print(index, ".", task, "-", status)
-            index += 1
-        try:
-            task_number = int(
-                input("Enter task index to mark as completed : ")
-            )
-            if 0 <= task_number < len(tasks):
-                completed[task_number] = True
-                print("Task marked as completed!")
-            else:
-                print("Invalid task index!")
-        except ValueError:
-            print("Please enter a valid number!")
+            print(index, ".", task, "- Priority :", priorities[index], "-", status)
+            task_list.insert(tk.END, task)
+            found = True
+        index += 1
+
+    if found == False:
+        print("No matching task found!")
+
+def clear_search():
+    search_entry.delete(0, tk.END)
+    view_tasks()
+root = tk.Tk()
+root.title("To-Do List Application")
+root.geometry("700x600")
+
+title = tk.Label(
+    root,
+    text="TO-DO LIST APPLICATION",
+    font=("Arial", 22, "bold")
+)
+
+title.pack(pady=20)
+
+task_label = tk.Label(root, text="Enter Task :", font=("Arial", 12))
+task_label.pack()
+
+task_entry = tk.Entry(root, width=45, font=("Arial", 12))
+task_entry.pack(pady=5)
+
+priority_label = tk.Label(root, text="Select Priority :", font=("Arial", 12))
+priority_label.pack()
+priority_var = tk.StringVar()
+priority_var.set("Medium")
+
+priority_menu = tk.OptionMenu(root, priority_var, "High", "Medium", "Low")
+priority_menu.pack(pady=5)
 
 
-def search_task():
+button_frame = tk.Frame(root)
+button_frame.pack(pady=15)
 
-    if len(tasks) == 0:
-        print("No task available to search.")
-    else:
-        search_task = input("Enter task to search : ").lower()
-        found = False
-        for index in range(len(tasks)):
-            if search_task in tasks[index].lower():
-                if completed[index] == True:
-                    status = "Completed"
-                else:
-                    status = "Pending"
-                print(index, ".", tasks[index], "- Priority :", priorities[index], "-", status)
-                found = True
+add_button = tk.Button(
+    button_frame,
+    text="Add Task",
+    width=12,
+    command=add_task
+)
 
-        if found == False:
-            print("No matching task found")
+add_button.grid(
+    row=0,
+    column=0,
+    padx=5
+)
 
 
-while True:
+view_button = tk.Button(
+    button_frame,
+    text="View Tasks",
+    width=12,
+    command=view_tasks
+)
 
-    print("\n1. Add Task")
-    print("2. View Task")
-    print("3. Update Task")
-    print("4. Delete Task")
-    print("5. Mark Task as Completed")
-    print("6. Search Task")
-    print("7. Exit")
+view_button.grid(
+    row=0,
+    column=1,
+    padx=5
+)
 
-    choice = input("\nEnter your choice : ")
 
-    if choice == "1":
-        add_task()
-    elif choice == "2":
-        view_tasks()
-    elif choice == "3":
-        update_task()
-    elif choice == "4":
-        delete_task()
-    elif choice == "5":
-        mark_completed()
-    elif choice == "6":
-        search_task()
-    elif choice == "7":
-        print("Thank You for using To-Do List!")
-        break
-    
-    else:
-        print("Invalid choice! Please try again.")
-        
+update_button = tk.Button(
+    button_frame,
+    text="Update Task",
+    width=12,
+    command=update_task
+)
+
+update_button.grid(
+    row=0,
+    column=2,
+    padx=5
+)
+
+
+delete_button = tk.Button(
+    button_frame,
+    text="Delete Task",
+    width=12,
+    command=delete_task
+)
+
+delete_button.grid(
+    row=0,
+    column=3,
+    padx=5
+)
+
+
+complete_button = tk.Button(
+    button_frame,
+    text="Complete",
+    width=12,
+    command=mark_completed
+)
+
+complete_button.grid(
+    row=0,
+    column=4,
+    padx=5
+)
+
+
+search_label = tk.Label(
+    root,
+    text="Search Task :",
+    font=("Arial", 12)
+)
+
+search_label.pack()
+
+
+search_entry = tk.Entry(
+    root,
+    width=40,
+    font=("Arial", 12)
+)
+
+search_entry.pack(pady=5)
+
+
+search_button = tk.Button(
+    root,
+    text="Search",
+    width=12,
+    command=search_task
+)
+
+search_button.pack(pady=5)
+
+
+clear_button = tk.Button(
+    root,
+    text="Clear Search",
+    width=12,
+    command=clear_search
+)
+
+clear_button.pack(pady=5)
+
+
+list_label = tk.Label(
+    root,
+    text="Your Tasks",
+    font=("Arial", 14, "bold")
+)
+
+list_label.pack(pady=10)
+
+
+task_list = tk.Listbox(
+    root,
+    width=70,
+    height=12,
+    font=("Arial", 11)
+)
+
+task_list.pack()
+root.mainloop()
