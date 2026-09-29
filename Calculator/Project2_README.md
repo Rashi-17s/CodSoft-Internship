@@ -74,8 +74,8 @@ The program handles:
 ```text
 Simple-Calculator/
 │
-├── main.py
-└── README.md
+├── calc.py
+└── Project2_README.md
 ```
 
 ---
